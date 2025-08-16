@@ -108,7 +108,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
             const SizedBox(height: 16),
             
             DropdownButtonFormField<String>(
-              value: _selectedType,
+              initialValue: _selectedType,
               decoration: const InputDecoration(
                 labelText: 'Address Type',
                 border: OutlineInputBorder(),

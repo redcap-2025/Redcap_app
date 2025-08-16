@@ -1,5 +1,6 @@
-import org.gradle.api.file.Directory
 import org.gradle.api.tasks.Delete
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.file.Directory
 
 allprojects {
     repositories {
@@ -7,7 +8,7 @@ allprojects {
         mavenCentral()
     }
 
-    // Suppress Java compilation lint warnings (e.g., bootstrap classpath)
+    // Suppress Java compilation lint warnings
     tasks.withType<JavaCompile>().configureEach {
         options.compilerArgs.add("-Xlint:-options")
     }
@@ -19,13 +20,8 @@ layout.buildDirectory.set(newBuildDir)
 
 // Set subproject build directories
 subprojects {
-    val subprojectBuildDir: Directory = newBuildDir.dir(name)
-    layout.buildDirectory.set(subprojectBuildDir)
-}
-
-// Optional: Ensure app module is evaluated first if needed
-subprojects {
-    evaluationDependsOn(":app")
+    layout.buildDirectory.set(newBuildDir.dir(name))
+    evaluationDependsOn(":app") // Ensure app is evaluated first
 }
 
 // Register clean task

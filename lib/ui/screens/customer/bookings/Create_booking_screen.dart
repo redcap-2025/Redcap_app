@@ -185,7 +185,7 @@ Thank you!
 
               // Truck Type Dropdown
               DropdownButtonFormField<String>(
-                value: _selectedTruckType,
+                initialValue: _selectedTruckType,
                 decoration: const InputDecoration(
                   labelText: 'Truck Type',
                   prefixIcon: Icon(Icons.local_shipping),

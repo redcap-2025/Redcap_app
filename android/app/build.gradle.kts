@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -15,10 +15,41 @@ android {
 
     defaultConfig {
         applicationId = "com.example.redcap"
-        minSdk = 21
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    // ✅ Signing configs (debug + release template)
+    signingConfigs {
+        getByName("debug") // Flutter auto-provides debug
+
+        create("release") {
+            // ⚠️ Replace these with your keystore details when publishing
+            storeFile = file("../keystore.jks")
+            storePassword = "your-store-password"
+            keyAlias = "your-key-alias"
+            keyPassword = "your-key-password"
+        }
+    }
+
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+
+        getByName("debug") {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            signingConfig = signingConfigs.getByName("debug")
+        }
     }
 
     compileOptions {
@@ -30,32 +61,6 @@ android {
         jvmTarget = "1.8"
     }
 
-    buildTypes {
-        // Release build type
-        maybeCreate("release").apply {
-            // ✅ Correct: Use `isMinifyEnabled` and `isShrinkResources`
-            isMinifyEnabled = true
-            isShrinkResources = true
-
-            // Link to signing config
-            signingConfig = signingConfigs.findByName("release")
-
-            // ProGuard rules
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-
-        // Debug build type
-        maybeCreate("debug").apply {
-            isMinifyEnabled = false
-            isShrinkResources = false
-            signingConfig = signingConfigs.findByName("debug")
-        }
-    }
-
-    // Optional: Enable viewBinding
     buildFeatures {
         viewBinding = false
     }
@@ -65,7 +70,7 @@ flutter {
     source = "../.."
 }
 
-// Kotlin compilation
+// Kotlin compilation settings
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "1.8"

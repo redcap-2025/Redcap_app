@@ -362,7 +362,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: AppConstants.primaryColor,
+            activeThumbColor: AppConstants.primaryColor,
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
         ],
